@@ -1,0 +1,30 @@
+.board {
+  height: 600px;
+  width: 300px;
+  background-color: black;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.square {
+  box-shadow: inset 0 0 0 1px rgb(87, 87, 87);
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+}
+
+.O {
+  background-color: #feff2f;
+}
+.I {
+  background-color: #e41316;
+}
+.L {
+  background-color: #fe7f03;
+}
+.S {
+  background-color: #4db149;
+}
+.T {
+  background-color: #4db149;
+}
