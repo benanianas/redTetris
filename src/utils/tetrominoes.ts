@@ -1,10 +1,10 @@
-type TetrominoShape = string[][];
+import { TetrominoShape } from "../type";
 
-export const board_y:number = 10; 
-export const board_x:number = 20; 
+export const board_y: number = 10;
+export const board_x: number = 20;
 
 export const tetrominoes: Record<string, TetrominoShape> = {
-  //   I: ["I", "I", "I", "I"],
+  I: ["I", "I", "I", "I"],
   O: [
     ["O", "O"],
     ["O", "O"],
@@ -25,5 +25,13 @@ export const tetrominoes: Record<string, TetrominoShape> = {
 };
 
 export const randomTet = () => {
-    return Object.keys(tetrominoes)[Math.floor(Math.random()*4)]
+  return Object.keys(tetrominoes)[Math.floor(Math.random() * 4)];
 };
+
+export const rotateShape = (shape) => {
+ 
+};
+
+rotateShape(tetrominoes["L"]);
+
+// console.log(rotateShape(tetrominoes['T']))
