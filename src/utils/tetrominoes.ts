@@ -1,7 +1,7 @@
 import { TetrominoShape, Tetromino } from "../type";
 
-export const board_y: number = 10;
-export const board_x: number = 20;
+export const board_x: number = 10;
+export const board_y: number = 20;
 
 export const tetrominoes: Record<string, TetrominoShape> = {
   I: [
@@ -60,7 +60,12 @@ export const rotateShape = (shape: TetrominoShape): TetrominoShape => {
 };
 
 export const checkIfPossible = (tetromino: Tetromino): boolean => {
-
-    
+  for (let i = 0; i < tetromino.shape.length; i++)
+    for (let j = 0; j < tetromino.shape[i].length; j++)
+      if (
+        tetromino.shape[i][j] !== "." &&
+        (j + tetromino.x >= board_x || j + tetromino.x < 0 || i + tetromino.y >= board_y)
+      )
+        return false;
   return true;
 };
