@@ -1,41 +1,44 @@
 import { useState } from "react";
 
 import c from "./Board.module.css";
-import { tetrominoes, board_x, board_y } from "../utils/tetrominoes";
+import {
+  tetrominoes,
+  board_x,
+  board_y,
+  rotateShape,
+} from "../utils/tetrominoes";
 import { Tetromino } from "../type";
 
 const gameBoard: string[] = Array(board_x * board_y).fill(".");
 
 export default function Board() {
-  const [tetromino, setTetromino] = useState<Tetromino | undefined>();
+  const [tetromino, setTetromino] = useState<Tetromino>({
+    x: 0,
+    y: 4,
+    shape: tetrominoes["S"],
+  });
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === "r")
-      setTetromino({
-        x: 0,
-        y: 4,
-        shape: tetrominoes["O"],
-      });
-    if (event.key === "ArrowDown")
-      setTetromino((prevTet) => {
-        if (prevTet) return { ...prevTet, x: prevTet.x + 1 };
-      });
-    if (event.key === "ArrowUp") console.log("rotate");
+  const handleKeyDown = (event: React.KeyboardEvent): void => {
+    let { shape, x, y } = tetromino;
+    if (event.key === "ArrowDown") x++;
+    if (event.key === "ArrowUp") shape = rotateShape(tetromino.shape);
     if (event.key === " ") console.log("bottom");
-    if (event.key === "ArrowRight") console.log("move right");
-    if (event.key === "ArrowLeft") console.log("move left");
+    if (event.key === "ArrowRight") y++;
+    if (event.key === "ArrowLeft") y--;
+
+    setTetromino((prevTetris) => {
+      return { ...prevTetris, x, y, shape };
+    });
   };
 
   // TODO: update this cause it's gonna overwrite everything!
   gameBoard.fill(".");
 
   tetromino?.shape.map((row, i) => {
-    if (Array.isArray(row))
-      row.map(
-        (col, j) =>
-          (gameBoard[j + tetromino.y + (i + tetromino.x) * board_y] = col)
-      );
-    else gameBoard[i + tetromino.y + tetromino.x * board_y] = row;
+    row.map((col, j) => {
+      if (col != ".")
+        gameBoard[j + tetromino.y + (i + tetromino.x) * board_y] = col;
+    });
   });
 
   return (

@@ -14,17 +14,23 @@
 }
 
 .O {
-  background-color: #feff2f;
+  background-color: #fffb15;
 }
 .I {
-  background-color: #e41316;
+  background-color: #20f1f3;
 }
 .L {
-  background-color: #fe7f03;
+  background-color: #f1ad13;
+}
+.L2 {
+  background-color: #1619d6;
 }
 .S {
-  background-color: #4db149;
+  background-color: #00fc01;
+}
+.S2 {
+  background-color: #df0a0a;
 }
 .T {
-  background-color: #4db149;
+  background-color: #a004ff;
 }
