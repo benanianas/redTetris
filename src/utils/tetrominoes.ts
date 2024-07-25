@@ -42,19 +42,18 @@ export const tetrominoes: Record<string, TetrominoShape> = {
 };
 
 export const randomTet = () => {
-  return Object.keys(tetrominoes)[Math.floor(Math.random() * 4)];
+  return Object.keys(tetrominoes)[Math.floor(Math.random() * 7)];
 };
 
 export const rotateShape = (shape: TetrominoShape): TetrominoShape => {
-  const m = shape.length;
-  const n = shape[0].length;
+  const n = shape.length;
 
   const newShape: TetrominoShape = Array.from({ length: n }, () =>
-    Array(m).fill(null)
+    Array(n).fill(null)
   );
 
-  for (let i = 0; i < m; i++)
-    for (let j = 0; j < n; j++) newShape[n - 1 - j][i] = shape[i][j];
+  for (let i = 0; i < n; i++)
+    for (let j = 0; j < n; j++) newShape[n - j - 1][i] = shape[i][j];
 
   return newShape;
 };
