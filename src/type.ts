@@ -6,3 +6,5 @@ export interface Tetromino {
   shape: TetrominoShape;
 }
 
+export type tetrominoesList = "I" | "O" | "T" | "L" | "L2" | "S" | "S2";
+

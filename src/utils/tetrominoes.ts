@@ -1,9 +1,10 @@
-import { TetrominoShape, Tetromino } from "../type";
+import { TetrominoShape, Tetromino, tetrominoesList } from "../type";
 
 export const board_x: number = 10;
 export const board_y: number = 20;
 
-export const tetrominoes: Record<string, TetrominoShape> = {
+
+export const tetrominoes: Record<tetrominoesList, TetrominoShape> = {
   I: [
     [".", ".", ".", "."],
     ["I", "I", "I", "I"],
@@ -41,8 +42,9 @@ export const tetrominoes: Record<string, TetrominoShape> = {
   ],
 };
 
-export const randomTet = () => {
-  return Object.keys(tetrominoes)[Math.floor(Math.random() * 7)];
+export const randomTet = (): tetrominoesList => {
+  const keys: tetrominoesList[] = ["I", "O", "T", "L", "L2", "S", "S2"];
+  return keys[Math.floor(Math.random() * 7)];
 };
 
 export const rotateShape = (shape: TetrominoShape): TetrominoShape => {
@@ -63,7 +65,9 @@ export const checkIfPossible = (tetromino: Tetromino): boolean => {
     for (let j = 0; j < tetromino.shape[i].length; j++)
       if (
         tetromino.shape[i][j] !== "." &&
-        (j + tetromino.x >= board_x || j + tetromino.x < 0 || i + tetromino.y >= board_y)
+        (j + tetromino.x >= board_x ||
+          j + tetromino.x < 0 ||
+          i + tetromino.y >= board_y)
       )
         return false;
   return true;
