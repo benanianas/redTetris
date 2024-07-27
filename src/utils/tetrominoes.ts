@@ -1,10 +1,9 @@
-import { TetrominoShape, Tetromino, tetrominoesList } from "../type";
+import { TetrominoShape, Tetromino, tetrominoesType } from "../type";
 
 export const board_x: number = 10;
 export const board_y: number = 20;
 
-
-export const tetrominoes: Record<tetrominoesList, TetrominoShape> = {
+export const tetrominoes: Record<tetrominoesType, TetrominoShape> = {
   I: [
     [".", ".", ".", "."],
     ["I", "I", "I", "I"],
@@ -42,8 +41,8 @@ export const tetrominoes: Record<tetrominoesList, TetrominoShape> = {
   ],
 };
 
-export const randomTet = (): tetrominoesList => {
-  const keys: tetrominoesList[] = ["I", "O", "T", "L", "L2", "S", "S2"];
+export const randomTet = (): tetrominoesType => {
+  const keys: tetrominoesType[] = ["I", "O", "T", "L", "L2", "S", "S2"];
   return keys[Math.floor(Math.random() * 7)];
 };
 
@@ -60,15 +59,18 @@ export const rotateShape = (shape: TetrominoShape): TetrominoShape => {
   return newShape;
 };
 
-export const checkIfPossible = (tetromino: Tetromino): boolean => {
+export const checkPosition = (
+  tetromino: Tetromino
+): { isValid: boolean; side?: string } => {
   for (let i = 0; i < tetromino.shape.length; i++)
     for (let j = 0; j < tetromino.shape[i].length; j++)
-      if (
-        tetromino.shape[i][j] !== "." &&
-        (j + tetromino.x >= board_x ||
-          j + tetromino.x < 0 ||
-          i + tetromino.y >= board_y)
-      )
-        return false;
-  return true;
+      if (tetromino.shape[i][j] === tetromino.type) {
+        if (j + tetromino.x >= board_x)
+          return { isValid: false, side: "right" };
+        else if (j + tetromino.x < 0) return { isValid: false, side: "left" };
+        else if (i + tetromino.y >= board_y)
+          return { isValid: false, side: "bottom" };
+      }
+
+  return { isValid: true };
 };

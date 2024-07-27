@@ -4,7 +4,7 @@ export interface Tetromino {
   x: number;
   y: number;
   shape: TetrominoShape;
+  type: tetrominoesType;
 }
 
-export type tetrominoesList = "I" | "O" | "T" | "L" | "L2" | "S" | "S2";
-
+export type tetrominoesType = "I" | "O" | "T" | "L" | "L2" | "S" | "S2";

@@ -6,7 +6,7 @@ import {
   board_x,
   board_y,
   rotateShape,
-  checkIfPossible,
+  checkPosition,
   randomTet,
 } from "../utils/tetrominoes";
 import { Tetromino } from "../type";
@@ -14,42 +14,74 @@ import { Tetromino } from "../type";
 const gameBoard: string[] = Array(board_x * board_y).fill(".");
 
 const Board: React.FC = () => {
+  // const trr = randomTet();
+  const trr = "I";
   const [tetromino, setTetromino] = useState<Tetromino>({
     x: 4,
-    y: 0,
-    shape: tetrominoes[randomTet()],
+    y: 5,
+    shape: tetrominoes[trr],
+    type: trr,
   });
   const [allowRotation, setAllowRotation] = useState<boolean>(true);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTetromino((prevTetromino) => {
-        const { y } = prevTetromino;
-        if (checkIfPossible({ ...prevTetromino, y: y + 1 }))
-          return { ...prevTetromino, y: y + 1 };
-        return prevTetromino;
-      });
-    }, 900);
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setTetromino((prevTetromino) => {
+  //       const { y } = prevTetromino;
+  //       if (checkPosition({ ...prevTetromino, y: y + 1 }).isValid)
+  //         return { ...prevTetromino, y: y + 1 };
+  //       return prevTetromino;
+  //     });
+  //   }, 900);
+  //   return () => clearInterval(interval);
+  // }, []);
+
+  const bounce = (
+    side: string,
+    tetromino: Tetromino,
+    prevTetromino: Tetromino
+  ): Tetromino => {
+    let { x, y } = tetromino;
+
+    side === "right" ? x-- : side === "left" ? x++ : y--;
+
+    const { isValid, side: side2 } = checkPosition({ ...tetromino, x, y });
+    if (isValid) return { ...tetromino, x, y };
+    else if (tetromino.type === "I") {
+      side2 === "right" ? x-- : side2 === "left" ? x++ : y--;
+      if (checkPosition({ ...tetromino, x, y }).isValid)
+        return { ...tetromino, x, y };
+    }
+
+    return prevTetromino;
+  };
 
   const handleKeyDown = (event: React.KeyboardEvent): void => {
     setTetromino((prevTetromino) => {
-      let { x, y, shape } = prevTetromino;
-      if (event.key === "ArrowDown") y++;
+      const { x, y } = prevTetromino;
+      let { shape } = prevTetromino;
+
+      let offsetX = 0,
+        offsetY = 0;
+      if (event.key === " ") console.log("bottom");
+      else if (event.key === "ArrowRight") offsetX++;
+      else if (event.key === "ArrowLeft") offsetX--;
+      else if (event.key === "ArrowDown") offsetY++;
       else if (event.key === "ArrowUp") {
         if (allowRotation) {
           shape = rotateShape(prevTetromino.shape);
-
           setAllowRotation(false);
         }
-      } else if (event.key === " ") console.log("bottom");
-      else if (event.key === "ArrowRight") x++;
-      else if (event.key === "ArrowLeft") x--;
-
-      if (checkIfPossible({ x, y, shape })) return { x, y, shape };
-
-      return prevTetromino;
+      }
+      const newTetromino = {
+        ...prevTetromino,
+        x: x + offsetX,
+        y: y + offsetY,
+        shape,
+      };
+      const { isValid, side } = checkPosition(newTetromino);
+      if (isValid) return newTetromino;
+      else return bounce(side, newTetromino, prevTetromino);
     });
   };
 

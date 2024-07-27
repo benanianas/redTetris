@@ -14,24 +14,24 @@
   background-color: transparent;
 }
 
-.O {
+.O, .o {
   background-color: #fffb15;
 }
-.I {
+.I, .i {
   background-color: #20f1f3;
 }
-.L {
+.L, .l {
   background-color: #f1ad13;
 }
-.L2 {
+.L2, .l2{
   background-color: #1619d6;
 }
-.S {
+.S, .s{
   background-color: #00fc01;
 }
-.S2 {
+.S2, .s2 {
   background-color: #df0a0a;
 }
-.T {
+.T, .t{
   background-color: #a004ff;
 }
