@@ -1,14 +1,14 @@
-import { TetrominoShape, Tetromino, tetrominoesType } from "../type";
+import { TetrominoShape, Tetromino, tetrominoesType, sideType } from "../type";
 
 export const board_x: number = 10;
 export const board_y: number = 20;
 
 export const tetrominoes: Record<tetrominoesType, TetrominoShape> = {
   I: [
-    [".", ".", ".", "."],
-    ["I", "I", "I", "I"],
-    [".", ".", ".", "."],
-    [".", ".", ".", "."],
+    [".", "I", ".", "."],
+    [".", "I", ".", "."],
+    [".", "I", ".", "."],
+    [".", "I", ".", "."],
   ],
   O: [
     ["O", "O"],
@@ -61,7 +61,7 @@ export const rotateShape = (shape: TetrominoShape): TetrominoShape => {
 
 export const checkPosition = (
   tetromino: Tetromino
-): { isValid: boolean; side?: string } => {
+): { isValid: boolean; side?: sideType } => {
   for (let i = 0; i < tetromino.shape.length; i++)
     for (let j = 0; j < tetromino.shape[i].length; j++)
       if (tetromino.shape[i][j] === tetromino.type) {

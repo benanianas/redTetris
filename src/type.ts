@@ -8,3 +8,5 @@ export interface Tetromino {
 }
 
 export type tetrominoesType = "I" | "O" | "T" | "L" | "L2" | "S" | "S2";
+
+export type sideType = "right" | "left" | "bottom";

@@ -9,37 +9,36 @@ import {
   checkPosition,
   randomTet,
 } from "../utils/tetrominoes";
-import { Tetromino } from "../type";
+import { Tetromino, sideType } from "../type";
 
 const gameBoard: string[] = Array(board_x * board_y).fill(".");
 
 const Board: React.FC = () => {
-  // const trr = randomTet();
-  const trr = "I";
+  const trr = randomTet();
   const [tetromino, setTetromino] = useState<Tetromino>({
     x: 4,
-    y: 5,
+    y: 0,
     shape: tetrominoes[trr],
     type: trr,
   });
   const [allowRotation, setAllowRotation] = useState<boolean>(true);
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setTetromino((prevTetromino) => {
-  //       const { y } = prevTetromino;
-  //       if (checkPosition({ ...prevTetromino, y: y + 1 }).isValid)
-  //         return { ...prevTetromino, y: y + 1 };
-  //       return prevTetromino;
-  //     });
-  //   }, 900);
-  //   return () => clearInterval(interval);
-  // }, []);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTetromino((prevTetromino) => {
+        const { y } = prevTetromino;
+        if (checkPosition({ ...prevTetromino, y: y + 1 }).isValid)
+          return { ...prevTetromino, y: y + 1 };
+        return prevTetromino;
+      });
+    }, 900);
+    return () => clearInterval(interval);
+  }, []);
 
   const bounce = (
-    side: string,
     tetromino: Tetromino,
-    prevTetromino: Tetromino
+    prevTetromino: Tetromino,
+    side: sideType | undefined
   ): Tetromino => {
     let { x, y } = tetromino;
 
@@ -81,7 +80,7 @@ const Board: React.FC = () => {
       };
       const { isValid, side } = checkPosition(newTetromino);
       if (isValid) return newTetromino;
-      else return bounce(side, newTetromino, prevTetromino);
+      else return bounce(newTetromino, prevTetromino, side);
     });
   };
 
