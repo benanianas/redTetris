@@ -1,20 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import c from "./Board.module.css";
 import {
   tetrominoes,
+  gameBoard,
   board_x,
-  board_y,
   rotateShape,
   checkPosition,
   randomTet,
 } from "../utils/tetrominoes";
 import { Tetromino, sideType } from "../type";
 
-const gameBoard: string[] = Array(board_x * board_y).fill(".");
-
 const Board: React.FC = () => {
-  const trr = randomTet();
+  // const trr = randomTet();
+  const trr = 'I';
   const [tetromino, setTetromino] = useState<Tetromino>({
     x: 4,
     y: 0,
@@ -23,19 +22,22 @@ const Board: React.FC = () => {
   });
   const [allowRotation, setAllowRotation] = useState<boolean>(true);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTetromino((prevTetromino) => {
-        const { y } = prevTetromino;
-        if (checkPosition({ ...prevTetromino, y: y + 1 }).isValid)
-          return { ...prevTetromino, y: y + 1 };
-        return prevTetromino;
-      });
-    }, 900);
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setTetromino((prevTetromino) => {
+  //       const { y } = prevTetromino;
+  //       const { isValid } = checkPosition(
+  //         { ...prevTetromino, y: y + 1 },
+  //         prevTetromino
+  //       );
+  //       if (isValid) return { ...prevTetromino, y: y + 1 };
+  //       return prevTetromino;
+  //     });
+  //   }, 900);
+  //   return () => clearInterval(interval);
+  // }, []);
 
-  const bounce = (
+  const bounceBack = (
     tetromino: Tetromino,
     prevTetromino: Tetromino,
     side: sideType | undefined
@@ -44,11 +46,14 @@ const Board: React.FC = () => {
 
     side === "right" ? x-- : side === "left" ? x++ : y--;
 
-    const { isValid, side: side2 } = checkPosition({ ...tetromino, x, y });
+    const { isValid, side: side2 } = checkPosition(
+      { ...tetromino, x, y },
+      tetromino
+    );
     if (isValid) return { ...tetromino, x, y };
     else if (tetromino.type === "I") {
       side2 === "right" ? x-- : side2 === "left" ? x++ : y--;
-      if (checkPosition({ ...tetromino, x, y }).isValid)
+      if (checkPosition({ ...tetromino, x, y }, tetromino).isValid)
         return { ...tetromino, x, y };
     }
 
@@ -78,14 +83,19 @@ const Board: React.FC = () => {
         y: y + offsetY,
         shape,
       };
-      const { isValid, side } = checkPosition(newTetromino);
+      const { isValid, side } = checkPosition(newTetromino, tetromino);
+      // console.log(isValid, side)
       if (isValid) return newTetromino;
-      else return bounce(newTetromino, prevTetromino, side);
+      else if (event.key === "ArrowUp")
+        return bounceBack(newTetromino, prevTetromino, side);
+      return prevTetromino;
     });
   };
 
-  // TODO: update this cause it's gonna overwrite everything!
-  gameBoard.fill(".");
+  const tetrominoesTypes = ["i", "o", "t", "l", "l2", "s", "s2"];
+  gameBoard.forEach((elm, i, board) => {
+    board[i] = tetrominoesTypes.includes(elm) ? elm : ".";
+  });
 
   tetromino?.shape.map((row, i) => {
     row.map((col, j) => {
