@@ -1,13 +1,15 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 
 import c from "./Board.module.css";
 import {
   tetrominoes,
   gameBoard,
   board_x,
+  board_y,
   rotateShape,
   checkPosition,
   stackTetromino,
+  possiblePosition,
 } from "../utils/tetrominoes";
 import { Tetromino, sideType, tetrominoesType } from "../type";
 
@@ -25,26 +27,25 @@ const Board: React.FC<{ tetos: tetrominoesType[] }> = ({ tetos }) => {
     const interval = setInterval(() => {
       setTetromino((prevTetromino) => {
         const { y } = prevTetromino;
-        const { isValid, side} = checkPosition({ ...prevTetromino, y: y + 1 });
+        const { isValid, side } = checkPosition({ ...prevTetromino, y: y + 1 });
         if (isValid) return { ...prevTetromino, y: y + 1 };
-        else if(side === "bottom" && prevTetromino.y === 0){
+        else if (side === "bottom" && prevTetromino.y === 0) {
           // TODO: Game Over Logic here!
-          console.log('gameOver')
+          console.log("gameOver");
           clearInterval(interval);
           return prevTetromino;
-        }
-        else {
+        } else {
           stackTetromino(prevTetromino.type);
-          setCurrentTet((prevI) => prevI+1);
-         return {
+          setCurrentTet((prevI) => prevI + 1);
+          return {
             x: 4,
             y: 0,
             shape: tetrominoes[tetos[currentTet + 1]],
-            type: tetos[currentTet +1],
+            type: tetos[currentTet + 1],
           };
         }
       });
-    }, 900);
+    }, 800);
     return () => clearInterval(interval);
   }, [currentTet, tetos]);
 
@@ -75,7 +76,8 @@ const Board: React.FC<{ tetos: tetrominoesType[] }> = ({ tetos }) => {
 
       let offsetX = 0,
         offsetY = 0;
-      if (event.key === " ") console.log("bottom");
+      if (event.key === " ")
+        return { ...prevTetromino, y: possiblePosition(tetromino) };
       else if (event.key === "ArrowRight") offsetX++;
       else if (event.key === "ArrowLeft") offsetX--;
       else if (event.key === "ArrowDown") offsetY++;
@@ -99,21 +101,29 @@ const Board: React.FC<{ tetos: tetrominoesType[] }> = ({ tetos }) => {
     });
   };
 
-  const tetrominoesTypes = ["i", "o", "t", "l", "l2", "s", "s2"];
+  // clear Board from last tetriminos and Placeholders
   gameBoard.forEach((elm, i, board) => {
-    board[i] = tetrominoesTypes.includes(elm) ? elm : ".";
+    board[i] = (elm === tetromino.type || elm === "ph") ? "." : elm;
   });
 
-  tetromino?.shape.map((row, i) => {
-    row.map((col, j) => {
-      if (col != ".")
-        gameBoard[j + tetromino.x + (i + tetromino.y) * board_x] = col;
+  // Put PlaceHolders in board
+  const y = possiblePosition(tetromino);
+  tetromino.shape.forEach((row, i) => {
+    row.forEach((cell, j) => {
+      if (cell != ".") gameBoard[(y + i) * board_x + j + tetromino.x] = "ph";
+    });
+  });
+
+  // Put Tetriminos in the board
+  tetromino.shape.map((row, i) => {
+    row.map((cell, j) => {
+      if (cell != ".")
+        gameBoard[j + tetromino.x + (i + tetromino.y) * board_x] = cell;
     });
   });
 
   return (
     <>
-    {/* {currentTet} */}
       <div
         className={c.board}
         tabIndex={0}
@@ -121,7 +131,7 @@ const Board: React.FC<{ tetos: tetrominoesType[] }> = ({ tetos }) => {
         onKeyUp={() => setAllowRotation(true)}
       >
         {gameBoard.map((elm, i) => (
-          <span className={`${c.square} ${c[elm]}`} key={elm + i}></span>
+          <span className={`${c.square} ${c[elm]}`} key={i}></span>
         ))}
       </div>
     </>

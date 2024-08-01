@@ -17,9 +17,9 @@ export const tetrominoes: Record<tetrominoesType, TetrominoShape> = {
     ["O", "O"],
   ],
   T: [
-    [".", "T", "."], //  ["L", "L", "."],   [".", ".", "."],
-    ["T", "T", "T"], //  [".", "L", "."]    ["T", "T", "T"]
-    [".", ".", "."], //  [".", "L", "."]    [".", "T", "."]
+    [".", "T", "."],
+    ["T", "T", "T"],
+    [".", ".", "."],
   ],
   L: [
     [".", ".", "L"],
@@ -43,7 +43,7 @@ export const tetrominoes: Record<tetrominoesType, TetrominoShape> = {
   ],
 };
 
-// gameBoard[199] = "s";
+// gameBoard[199] = "ph";
 // gameBoard[198] = "s";
 // gameBoard[197] = "s";
 // gameBoard[196] = "s";
@@ -97,7 +97,7 @@ export const checkPosition = (
         else if (i + tetromino.y >= board_y)
           return { isValid: false, side: "bottom" };
         const cell = gameBoard[j + tetromino.x + (i + tetromino.y) * board_x];
-        if (cell !== "." && cell !== tetromino.type) {
+        if (cell !== "." && cell !== tetromino.type && cell !== "ph") {
           let side: sideType = "bottom";
           if (j === 0) side = "left";
           if (
@@ -119,4 +119,13 @@ export const stackTetromino = (tetrominoType: string) => {
   gameBoard.forEach((cell, i, board) => {
     if (cell === tetrominoType) board[i] = cell.toLocaleLowerCase();
   });
+};
+export const possiblePosition = (tetromino: Tetromino): number => {
+  let res: number = 0;
+  for (let y = 0; y < board_y; y++) {
+    const { isValid } = checkPosition({ ...tetromino, y });
+    if (isValid) res = y;
+    else break;
+  }
+  return res;
 };

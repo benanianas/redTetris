@@ -15,23 +15,26 @@
 }
 
 .O, .o {
-  background-color: #fffb15;
+  background-color: #fff68f;
 }
 .I, .i {
-  background-color: #20f1f3;
+  background-color: #7ad9e3;
 }
 .L, .l {
-  background-color: #f1ad13;
+  background-color: #e39a33;
 }
-.L2, .l2{
-  background-color: #1619d6;
+.L2, .l2 {
+  background-color: #4c5ad6;
 }
-.S, .s{
-  background-color: #00fc01;
+.S, .s {
+  background-color: #7dfc68;
 }
 .S2, .s2 {
-  background-color: #df0a0a;
+  background-color: #df6d6d;
 }
-.T, .t{
-  background-color: #a004ff;
+.T, .t {
+  background-color: #b36eff;
+}
+.ph{
+  background-color:  rgba(121, 121, 121, 0.466);
 }
