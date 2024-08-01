@@ -15,9 +15,9 @@ export const tetrominoes: Record<tetrominoesType, TetrominoShape> = {
     ["O", "O"],
   ],
   T: [
-    [".", "T", "."],
-    ["T", "T", "T"],
-    [".", ".", "."],
+    [".", "T", "."], //  ["L", "L", "."],   [".", ".", "."],
+    ["T", "T", "T"], //  [".", "L", "."]    ["T", "T", "T"]
+    [".", ".", "."], //  [".", "L", "."]    [".", "T", "."]
   ],
   L: [
     [".", ".", "L"],
@@ -42,23 +42,30 @@ export const tetrominoes: Record<tetrominoesType, TetrominoShape> = {
 };
 
 export const gameBoard: string[] = Array(board_x * board_y).fill(".");
-gameBoard[199] = "i";
-gameBoard[198] = "i";
-gameBoard[197] = "i";
-gameBoard[196] = "i";
-gameBoard[195] = "i";
-gameBoard[194] = "i";
-gameBoard[193] = "i";
-gameBoard[192] = "i";
-gameBoard[191] = "i";
-gameBoard[190] = "i";
-gameBoard[189] = "i";
-gameBoard[179] = "i";
-gameBoard[169] = "i";
-gameBoard[159] = "i";
-gameBoard[149] = "i";
-gameBoard[139] = "i";
-gameBoard[129] = "i";
+gameBoard[199] = "s";
+gameBoard[198] = "s";
+gameBoard[197] = "s";
+gameBoard[196] = "s";
+gameBoard[195] = "s";
+gameBoard[194] = "s";
+gameBoard[193] = "s";
+gameBoard[192] = "s";
+gameBoard[191] = "s";
+gameBoard[190] = "s";
+gameBoard[180] = "s";
+gameBoard[170] = "s";
+gameBoard[160] = "s";
+gameBoard[150] = "s";
+gameBoard[140] = "s";
+gameBoard[130] = "s";
+gameBoard[120] = "s";
+gameBoard[189] = "s";
+gameBoard[179] = "s";
+gameBoard[169] = "s";
+gameBoard[159] = "s";
+gameBoard[149] = "s";
+gameBoard[139] = "s";
+gameBoard[129] = "s";
 export const randomTet = (): tetrominoesType => {
   const keys: tetrominoesType[] = ["I", "O", "T", "L", "L2", "S", "S2"];
   return keys[Math.floor(Math.random() * 7)];
@@ -78,38 +85,29 @@ export const rotateShape = (shape: TetrominoShape): TetrominoShape => {
 };
 
 export const checkPosition = (
-  tetromino: Tetromino,
-  currentTetromino: Tetromino
+  tetromino: Tetromino
 ): { isValid: boolean; side?: sideType } => {
   for (let i = 0; i < tetromino.shape.length; i++)
-    for (let j = 0; j < tetromino.shape[i].length; j++)
-      if (tetromino.shape[i][j] === tetromino.type) {
+    for (let j = 0; j < tetromino.shape.length; j++)
+      if (tetromino.shape[i][j] !== ".") {
         if (j + tetromino.x >= board_x)
           return { isValid: false, side: "right" };
         else if (j + tetromino.x < 0) return { isValid: false, side: "left" };
         else if (i + tetromino.y >= board_y)
           return { isValid: false, side: "bottom" };
-        else if (
-          gameBoard[j + tetromino.x + (i + tetromino.y) * board_x] !== "."
-          && gameBoard[j + tetromino.x + (i + tetromino.y) * board_x] !== tetromino.type
-        ) {
+        const cell = gameBoard[j + tetromino.x + (i + tetromino.y) * board_x];
+        if (cell !== "." && cell !== tetromino.type) {
           let side: sideType = "bottom";
-          if(tetromino.y > currentTetromino.y){
-            console.log("bottom")
-            side = "bottom"
-          }
-          else if(tetromino.x > currentTetromino.x){
-            console.log("right")
-            side = "right"
-          }
-          else if(tetromino.x < currentTetromino.x){
-            console.log("left")
-            side = "left"
-          }
-            console.log("berra", j + tetromino.x , (i + tetromino.y))
-  
+          if (j === 0) side = "left";
+          if (
+            j + 1 === tetromino.shape.length ||
+            j + 2 === tetromino.shape.length
+          )
+            side = "right";
+          if (i + 1 === tetromino.shape.length) side = "bottom";
+          //TODO : what About TOP !!!! i don't think i need it but will see!
 
-          return { isValid: false, side };
+          return { isValid: false, side: side };
         }
       }
 
