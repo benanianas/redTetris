@@ -3,6 +3,8 @@ import { TetrominoShape, Tetromino, tetrominoesType, sideType } from "../type";
 export const board_x: number = 10;
 export const board_y: number = 20;
 
+export const gameBoard: string[] = Array(board_x * board_y).fill(".");
+
 export const tetrominoes: Record<tetrominoesType, TetrominoShape> = {
   I: [
     [".", "I", ".", "."],
@@ -41,31 +43,30 @@ export const tetrominoes: Record<tetrominoesType, TetrominoShape> = {
   ],
 };
 
-export const gameBoard: string[] = Array(board_x * board_y).fill(".");
-gameBoard[199] = "s";
-gameBoard[198] = "s";
-gameBoard[197] = "s";
-gameBoard[196] = "s";
-gameBoard[195] = "s";
-gameBoard[194] = "s";
-gameBoard[193] = "s";
-gameBoard[192] = "s";
-gameBoard[191] = "s";
-gameBoard[190] = "s";
-gameBoard[180] = "s";
-gameBoard[170] = "s";
-gameBoard[160] = "s";
-gameBoard[150] = "s";
-gameBoard[140] = "s";
-gameBoard[130] = "s";
-gameBoard[120] = "s";
-gameBoard[189] = "s";
-gameBoard[179] = "s";
-gameBoard[169] = "s";
-gameBoard[159] = "s";
-gameBoard[149] = "s";
-gameBoard[139] = "s";
-gameBoard[129] = "s";
+// gameBoard[199] = "s";
+// gameBoard[198] = "s";
+// gameBoard[197] = "s";
+// gameBoard[196] = "s";
+// gameBoard[195] = "s";
+// gameBoard[194] = "s";
+// gameBoard[193] = "s";
+// gameBoard[192] = "s";
+// gameBoard[191] = "s";
+// gameBoard[190] = "s";
+// gameBoard[180] = "s";
+// gameBoard[170] = "s";
+// gameBoard[160] = "s";
+// gameBoard[150] = "s";
+// gameBoard[140] = "s";
+// gameBoard[130] = "s";
+// gameBoard[120] = "s";
+// gameBoard[189] = "s";
+// gameBoard[179] = "s";
+// gameBoard[169] = "s";
+// gameBoard[159] = "s";
+// gameBoard[149] = "s";
+// gameBoard[139] = "s";
+// gameBoard[129] = "s";
 export const randomTet = (): tetrominoesType => {
   const keys: tetrominoesType[] = ["I", "O", "T", "L", "L2", "S", "S2"];
   return keys[Math.floor(Math.random() * 7)];
@@ -112,4 +113,10 @@ export const checkPosition = (
       }
 
   return { isValid: true };
+};
+
+export const stackTetromino = (tetrominoType: string) => {
+  gameBoard.forEach((cell, i, board) => {
+    if (cell === tetrominoType) board[i] = cell.toLocaleLowerCase();
+  });
 };
