@@ -7,19 +7,17 @@ import {
   board_x,
   rotateShape,
   checkPosition,
-  randomTet,
   stackTetromino,
 } from "../utils/tetrominoes";
-import { Tetromino, sideType } from "../type";
+import { Tetromino, sideType, tetrominoesType } from "../type";
 
-const Board: React.FC = () => {
-  const trr = randomTet();
-  // const trr = "I";
+const Board: React.FC<{ tetos: tetrominoesType[] }> = ({ tetos }) => {
+  const [currentTet, setCurrentTet] = useState<number>(0);
   const [tetromino, setTetromino] = useState<Tetromino>({
     x: 4,
     y: 0,
-    shape: tetrominoes[trr],
-    type: trr,
+    shape: tetrominoes[tetos[currentTet]],
+    type: tetos[currentTet],
   });
   const [allowRotation, setAllowRotation] = useState<boolean>(true);
 
@@ -27,24 +25,28 @@ const Board: React.FC = () => {
     const interval = setInterval(() => {
       setTetromino((prevTetromino) => {
         const { y } = prevTetromino;
-        const { isValid } = checkPosition(
-          { ...prevTetromino, y: y + 1 }
-        );
+        const { isValid, side} = checkPosition({ ...prevTetromino, y: y + 1 });
         if (isValid) return { ...prevTetromino, y: y + 1 };
-        else{
+        else if(side === "bottom" && prevTetromino.y === 0){
+          // TODO: Game Over Logic here!
+          console.log('gameOver')
+          clearInterval(interval);
+          return prevTetromino;
+        }
+        else {
           stackTetromino(prevTetromino.type);
-          const randomT = randomTet()
-          return {
+          setCurrentTet((prevI) => prevI+1);
+         return {
             x: 4,
             y: 0,
-            shape: tetrominoes[randomT],
-            type: randomT,
+            shape: tetrominoes[tetos[currentTet + 1]],
+            type: tetos[currentTet +1],
           };
         }
       });
     }, 900);
     return () => clearInterval(interval);
-  }, []);
+  }, [currentTet, tetos]);
 
   const bounceBack = (
     tetromino: Tetromino,
@@ -110,16 +112,19 @@ const Board: React.FC = () => {
   });
 
   return (
-    <div
-      className={c.board}
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
-      onKeyUp={() => setAllowRotation(true)}
-    >
-      {gameBoard.map((elm, i) => (
-        <span className={`${c.square} ${c[elm]}`} key={elm + i}></span>
-      ))}
-    </div>
+    <>
+    {/* {currentTet} */}
+      <div
+        className={c.board}
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+        onKeyUp={() => setAllowRotation(true)}
+      >
+        {gameBoard.map((elm, i) => (
+          <span className={`${c.square} ${c[elm]}`} key={elm + i}></span>
+        ))}
+      </div>
+    </>
   );
 };
 
