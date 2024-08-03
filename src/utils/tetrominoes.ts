@@ -89,7 +89,7 @@ export const checkPosition = (
   tetromino: Tetromino
 ): { isValid: boolean; side?: sideType } => {
   // TODO: Error here
-  for (let i = 0; i < tetromino.shape.length; i++)
+  for (let i = 0; i < tetromino?.shape?.length; i++)
     for (let j = 0; j < tetromino.shape.length; j++)
       if (tetromino.shape[i][j] !== ".") {
         if (j + tetromino.x >= board_x)
@@ -127,7 +127,6 @@ export const clearFullRow = () => {
       }
     }
     if (clear) {
-      console.log("clear", i / 10);
       gameBoard.splice(i, 10);
       gameBoard.unshift(...Array(10).fill("."));
     }
