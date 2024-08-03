@@ -88,6 +88,7 @@ export const rotateShape = (shape: TetrominoShape): TetrominoShape => {
 export const checkPosition = (
   tetromino: Tetromino
 ): { isValid: boolean; side?: sideType } => {
+  // TODO: Error here
   for (let i = 0; i < tetromino.shape.length; i++)
     for (let j = 0; j < tetromino.shape.length; j++)
       if (tetromino.shape[i][j] !== ".") {
@@ -141,7 +142,7 @@ export const stackTetromino = (tetrominoType: string) => {
 
 export const possiblePosition = (tetromino: Tetromino): number => {
   let res: number = 0;
-  for (let y = 0; y < board_y; y++) {
+  for (let y = tetromino.y; y < board_y; y++) {
     const { isValid } = checkPosition({ ...tetromino, y });
     if (isValid) res = y;
     else break;
