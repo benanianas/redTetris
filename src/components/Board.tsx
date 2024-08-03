@@ -5,11 +5,11 @@ import {
   tetrominoes,
   gameBoard,
   board_x,
-  board_y,
   rotateShape,
   checkPosition,
   stackTetromino,
   possiblePosition,
+  clearFullRow
 } from "../utils/tetrominoes";
 import { Tetromino, sideType, tetrominoesType } from "../type";
 
@@ -36,6 +36,7 @@ const Board: React.FC<{ tetos: tetrominoesType[] }> = ({ tetos }) => {
           return prevTetromino;
         } else {
           stackTetromino(prevTetromino.type);
+          clearFullRow();
           setCurrentTet((prevI) => prevI + 1);
           return {
             x: 4,
@@ -121,6 +122,7 @@ const Board: React.FC<{ tetos: tetrominoesType[] }> = ({ tetos }) => {
         gameBoard[j + tetromino.x + (i + tetromino.y) * board_x] = cell;
     });
   });
+  
 
   return (
     <>

@@ -115,11 +115,30 @@ export const checkPosition = (
   return { isValid: true };
 };
 
+export const clearFullRow = () => {
+  for (let i = 0; i < board_x * board_y; i += 10) {
+    if (i === board_x * board_y) continue;
+    let clear = true;
+    for (let x = 0; x <= board_x - 1; x++) {
+      if (gameBoard[x + i] === ".") {
+        clear = false;
+        break;
+      }
+    }
+    if (clear) {
+      console.log("clear", i / 10);
+      gameBoard.splice(i, 10);
+      gameBoard.unshift(...Array(10).fill("."));
+    }
+  }
+};
+
 export const stackTetromino = (tetrominoType: string) => {
   gameBoard.forEach((cell, i, board) => {
     if (cell === tetrominoType) board[i] = cell.toLocaleLowerCase();
   });
 };
+
 export const possiblePosition = (tetromino: Tetromino): number => {
   let res: number = 0;
   for (let y = 0; y < board_y; y++) {
